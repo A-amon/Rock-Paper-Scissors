@@ -5,7 +5,7 @@ var score = 0
 //read score from localstorage
 getScore = () => {
     savedScore = window.localStorage.getItem("score")
-    if (savedScore !== "undefined" && savedScore !== null)
+    if (savedScore !== "undefined" && savedScore !== "null")
         score = savedScore
 }
 
