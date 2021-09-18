@@ -1,0 +1,13 @@
+.container {
+	padding: 1rem;
+	margin: auto;
+
+	@include min-query($d-tablet) {
+		padding: 2rem 5rem;
+		max-width: $d-tablet;
+	}
+
+	@include min-query($d-laptop) {
+		max-width: $d-laptop;
+	}
+}

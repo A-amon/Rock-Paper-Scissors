@@ -1,0 +1,31 @@
+/****************
+* COLORS
+*****************/
+$c-white: hsl(0, 0%, 100%);
+$c-black: hsl(0, 0%, 0%);
+$c-black-haze: hsl(150, 5%, 91%);
+$c-big-stone: hsl(231, 45%, 17%);
+$c-fiord: hsl(229, 25%, 31%);
+$dark-text: hsl(229, 25%, 31%);
+$score-text: hsl(229, 64%, 46%);
+$header-outline: hsl(217, 16%, 45%);
+
+$paper-grad: linear-gradient(to top, hsl(230, 89%, 62%), hsl(230, 89%, 65%));
+$scissors-grad: linear-gradient(to top, hsl(39, 89%, 49%), hsl(40, 84%, 53%));
+$rock-grad: linear-gradient(to top, hsl(349, 71%, 52%), hsl(349, 70%, 56%));
+$radial-grad: radial-gradient(circle, hsl(214, 47%, 23%) 10%, hsl(237, 49%, 15%) 90%);
+$body-grad: linear-gradient(45deg, hsl(231, 45%, 17%), hsl(216, 47%, 22%));
+
+/****************
+* DEVICE SIZES
+*****************/
+$d-tablet: 768px;
+$d-laptop: 1020px;
+
+/****************
+* TYPOGRAPHY
+*****************/
+$ff-barlow: "Barlow Semi Condensed", sans-serif;
+
+$fw-semibold: 600;
+$fw-bold: 700;

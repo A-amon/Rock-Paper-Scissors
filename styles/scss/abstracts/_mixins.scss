@@ -1,0 +1,8 @@
+/****************
+* MEDIA QUERIES
+*****************/
+@mixin min-query($device-size) {
+	@media screen and (min-width: $device-size) {
+		@content;
+	}
+}

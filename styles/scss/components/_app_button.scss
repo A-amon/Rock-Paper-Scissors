@@ -1,0 +1,85 @@
+.app__button {
+	/*
+	* VARIABLES
+	*/
+	$app-button-size: 150px;
+	$app-button-size-mobile: 125px;
+	$app-button-shadow: rgba($c-black, 0.1);
+
+	height: $app-button-size-mobile;
+	width: $app-button-size-mobile;
+	border-radius: 50%;
+	border: none;
+	position: relative;
+	background-color: $c-big-stone;
+
+	&.picked {
+		pointer-events: none;
+	}
+
+	&--paper,
+	&--rock,
+	&--scissors {
+		box-shadow: 0 -7px 0 $app-button-shadow inset;
+
+		&::before {
+			content: "";
+			height: 80%;
+			width: 80%;
+			background-color: $c-black-haze;
+			display: block;
+			border-radius: inherit;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
+			transition: transform 0.3s;
+			box-shadow: 0 7px 0 $app-button-shadow inset;
+		}
+	}
+
+	&:hover {
+		&::before {
+			transform: scale(0);
+		}
+
+		path {
+			fill: $c-black-haze;
+		}
+	}
+
+	svg {
+		position: relative;
+		z-index: 1;
+	}
+
+	&--paper {
+		background: $paper-grad;
+	}
+
+	&--scissors {
+		background: $scissors-grad;
+	}
+
+	&--rock {
+		background: $rock-grad;
+	}
+
+	@include min-query($d-tablet) {
+		height: $app-button-size;
+		width: $app-button-size;
+
+		&.picked {
+			$scale-size: 1.5;
+
+			height: $app-button-size * $scale-size;
+			width: $app-button-size * $scale-size;
+
+			svg {
+				transform: scale($scale-size);
+			}
+		}
+	}
+}

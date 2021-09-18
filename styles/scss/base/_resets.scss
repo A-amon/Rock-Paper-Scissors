@@ -1,0 +1,32 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: $ff-barlow;
+	background: $body-grad;
+	background-size: cover;
+	background-repeat: no-repeat;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+
+	main {
+		flex: 1;
+	}
+}
+
+button {
+	cursor: pointer;
+	font-family: inherit;
+}
+
+.sr-only {
+	height: 1px;
+	width: 1px;
+	display: block;
+	overflow: hidden;
+	margin-top: -1px;
+}

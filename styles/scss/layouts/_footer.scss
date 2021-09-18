@@ -1,0 +1,13 @@
+.footer {
+	padding: 2rem;
+
+	.rules-modal__toggle {
+		margin: auto;
+	}
+
+	@include min-query($d-tablet) {
+		.rules-modal__toggle {
+			margin: 0 0 0 auto;
+		}
+	}
+}

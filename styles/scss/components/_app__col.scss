@@ -1,0 +1,20 @@
+.app {
+	&__col {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		&-title {
+			margin-top: 1rem;
+		}
+	}
+
+	@include min-query($d-tablet) {
+		&__col {
+			flex-direction: column-reverse;
+			&-title {
+				margin-top: 0;
+				margin-bottom: 1rem;
+			}
+		}
+	}
+}

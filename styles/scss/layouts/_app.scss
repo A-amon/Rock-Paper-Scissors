@@ -1,0 +1,57 @@
+.app {
+	text-align: center;
+	&__buttons,
+	&__cols {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		width: 100%;
+		max-width: 450px;
+		margin: auto;
+		justify-items: center;
+	}
+
+	&__buttons {
+		grid-template-rows: 1fr 1fr;
+		background: url("../../assets/images/bg-triangle.svg");
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: 60%;
+	}
+
+	&__button:nth-child(3) {
+		grid-column: 1/3;
+	}
+
+	&__stage[data-stage="2"] {
+		.app__cols {
+			margin-bottom: 2rem;
+		}
+		.app-result {
+			margin: auto;
+		}
+	}
+
+	@include min-query($d-tablet) {
+		&__cols {
+			max-width: 80%;
+		}
+	}
+
+	@include min-query($d-laptop) {
+		&__stage[data-stage="2"] {
+			position: relative;
+			.app__cols {
+				max-width: 100%;
+			}
+
+			.app-result {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: fit-content;
+			}
+		}
+	}
+}

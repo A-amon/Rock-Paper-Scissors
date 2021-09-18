@@ -1,143 +1,301 @@
-const MOVES = ['paper', 'scissors', 'rock']
-var playerMove, compMove
-var score = 0
 
-//read score from localstorage
-getScore = () => {
-    savedScore = window.localStorage.getItem("score")
-    if (savedScore !== "undefined" && savedScore !== "null")
-        score = savedScore
+const app = document.querySelector('.app')
+const appButtons = document.querySelectorAll('.app__button')
+
+/**
+ * Add click event listener to .app__button
+ */
+const addListenerToAppButtons = () => {
+	appButtons.forEach(appButton => {
+		appButton.addEventListener('click', handleAppButtonClick)
+	})
 }
 
-//save score to localstorage
-//set displayed scored value
-saveScore = () => {
-    window.localStorage.setItem("score", score)
-    document.getElementsByClassName("score__value")[0].textContent = score
+/**
+ * Handle .app__button click event
+ * @param {object} event 
+ */
+const handleAppButtonClick = (event) => {
+	const button = event.currentTarget
+
+	/**
+	 * Set new stage
+	 */
+	const currentStage = parseInt(app.getAttribute('data-current'))
+	const newStage = currentStage + 1
+
+	switchStage(newStage)
+	setupStage(newStage, button)
 }
 
-startMatch = () => {
-    setTimeout(() => {
-        computerMove()
-        displayWinner()
-    }, 3000)
+/**
+ * Show new stage
+ * @param  {number} newStage
+ */
+const switchStage = (newStage) => {
+	hideStages()
+
+	const stage = document.querySelector(`.app__stage[data-stage="${newStage}"]`)
+	stage.classList.remove('hide')
 }
 
-//display result 
-displayWinner = () => {
-    let winner = checkWinner()
-    let resultFinal = document.getElementsByClassName("result__final")[0]
-    let resultText = resultFinal.children[0]
-
-    if (winner === "player") {
-        resultText.textContent = "You win"
-        let playerResult = document.getElementsByClassName("result__player")[0]
-        playerResult.classList.add("winner")
-    }
-    else if (winner === "computer") {
-        resultText.textContent = "You lose"
-        let compResult = document.getElementsByClassName("result__computer")[0]
-        compResult.classList.add("winner")
-    }
-    else
-        resultText.textContent = "It's a draw"
-
-    resultFinal.classList.add("show")
+/**
+ * Setup stage
+ * Run related stage handler
+ * @param {number} stage 
+ * @param {object} playerButton 
+ */
+const setupStage = (stage, playerButton) => {
+	switch (stage) {
+		case 2:
+			playerButton && handleStage2(playerButton)
+			break
+		default:
+			break
+	}
 }
 
-//check rules for winner
-checkWinner = () => {
-    let winner = "player"
-    if (playerMove === compMove)
-        winner = "draw"
-    else if (playerMove === "paper" && compMove === "scissors")
-        winner = "computer"
-    else if (playerMove === "rock" && compMove === "paper")
-        winner = "computer"
-    else if (playerMove === "scissors" && compMove === "rock")
-        winner = "computer"
+const stageTwo = document.querySelector('.app__stage[data-stage="2"]')
+const appCols = stageTwo.querySelectorAll('.app__col')
 
-    if (winner == "player")
-        score++
-    else if (winner === "computer")
-        score > 0 ? score-- : score
-    saveScore()
-    return winner
+/**
+ * Handle stage 2
+ * @param {object} playerButton 
+ */
+const handleStage2 = (playerButton) => {
+	const clonedPlayerBtn = playerButton.cloneNode(true)
+	clonedPlayerBtn.classList.add('picked')
+
+	replaceElement(clonedPlayerBtn, appCols[0].children[0])
+
+	const computerPick = selectComputerPick()
+	const playerPick = playerButton.getAttribute('aria-label')
+
+	const result = getResult(playerPick, computerPick)
+	setResultText(result)
+	updateScore(result)
 }
 
-//player select move
-playerMove = (event) => {
-    let selectedButton = event.target
-    playerMove = selectedButton.getAttribute("data-value")
-
-    let resultPlayer = document.getElementsByClassName("result__player")[0]
-    let buttonImage = selectedButton.children[0]
-    buttonImage.setAttribute("alt", buttonImage.getAttribute("alt").replace("Select ", ""))     //remove "Select" prompt in selected button's image for accessibility
-    resultPlayer.replaceChild(selectedButton, resultPlayer.children[1])     //replace dummy button with selected button
-
-    hideSelectEl()
-    startMatch()
+/**
+ * Update score value
+ * > Calculate new score
+ * @param {number} result 
+ */
+const updateScore = (result) => {
+	const newScore = getScore() + result
+	setScore(newScore)
 }
 
-//hide .select
-hideSelectEl = () => {
-    let selectEl = document.getElementsByClassName("select")[0]
-    selectEl.classList.add("hide")
+const result = document.querySelector('.app-result')
+const resultText = result.querySelector('.app-result__text')
+const resultBtn = result.querySelector('.app-result__button')
 
-    showResultEl()
+/**
+ * Add click event listener to .app-result__button
+ */
+const addListenerToResultBtn = () => {
+	resultBtn.addEventListener('click', handleResultBtnClick)
 }
 
-//show .result
-showResultEl = () => {
-    let resultEl = document.getElementsByClassName("result")[0]
-    resultEl.classList.remove("hide")
+/**
+ * Handle .app-result__button click event
+ */
+const handleResultBtnClick = () => {
+	switchStage(1)
+	resetStageTwo()
 }
 
-//computer select move
-computerMove = () => {
-    let randomInd = Math.floor(Math.random() * 3)
-    compMove = MOVES[randomInd]
+/**
+ * Reset stage 2 to default view
+ * > Show empty circles in buttons' place
+ */
+const resetStageTwo = () => {
+	const emptyButton = document.createElement('div')
+	emptyButton.classList.add('app__button', 'picked')
 
-    let selectButtons = document.getElementsByClassName("select__button")
+	appCols.forEach(appCol => {
+		const clonedEmptyBtn = emptyButton.cloneNode(true)
+		const appButton = appCol.querySelector('.app__button')
 
-    let compButton = selectButtons[randomInd].cloneNode(true)
-    let resultComp = document.getElementsByClassName("result__computer")[0]
-
-    let buttonImage = compButton.children[0]
-    buttonImage.setAttribute("alt", buttonImage.getAttribute("alt").replace("Select ", ""))     //remove "Select" prompt in selected button's image for accessibility
-
-    resultComp.replaceChild(compButton, resultComp.children[1])     //replace dummy button with selected button
+		replaceElement(clonedEmptyBtn, appButton)
+	})
 }
 
-//open and close modal
-handleRulesModal = () => {
-    let rulesModal = document.getElementsByClassName("rules__modal")[0]
-    if (rulesModal.classList.contains("show"))
-        rulesModal.classList.remove('show')
-    else
-        rulesModal.classList.add("show")
+/**
+ * Get result
+ * > Lose: -1
+ * > Win: 1
+ * > Draw: 0
+ * @param {string} playerPick 
+ * @param {string} computerPick 
+ * @returns {number}
+ */
+const getResult = (playerPick, computerPick) => {
+	let resultValue = -1
+
+	if (playerPick === computerPick) {
+		resultValue = 0
+	}
+	else if (playerPick === 'Rock' && computerPick === 'Scissors') {
+		resultValue = 1
+	}
+	else if (playerPick === 'Scissors' && computerPick === 'Paper') {
+		resultValue = 1
+	}
+	else if (playerPick === 'Paper' && computerPick === 'Rock') {
+		resultValue = 1
+	}
+
+	return resultValue
 }
 
-//add click event to .select__button
-let selectButtons = document.getElementsByClassName("select__button")
+/**
+ * Set result text
+ * @param {number} result 
+ */
+const setResultText = (resultValue) => {
+	let resultMessage = 'It\'s a draw'
+	if (resultValue > 0) {
+		resultMessage = 'You win'
+	}
+	else if (resultValue < 0) {
+		resultMessage = 'You lose'
+	}
 
-for (let button of selectButtons) {
-    button.addEventListener("click", playerMove)
+	result.classList.remove('hide')
+	resultText.textContent = resultMessage
+	result.focus()
 }
 
-let againButtons = document.getElementsByClassName("again__button")
+/**
+ * Choose random computer pick
+ */
+const selectComputerPick = () => {
+	const buttonsLength = 3
+	const randomInd = Math.floor(Math.random() * buttonsLength)
 
-for (let againButton of againButtons) {
-    againButton.addEventListener("click", () => {
-        location.reload()
-    })
+	const computerBtn = appButtons[randomInd]
+	const clonedComputerBtn = computerBtn.cloneNode(true)
+	clonedComputerBtn.classList.add('picked')
+
+	replaceElement(clonedComputerBtn, appCols[1].children[0])
+
+	const computerPick = computerBtn.getAttribute('aria-label')
+	return computerPick
 }
 
-getScore()
-saveScore()
+/**
+ * Replace element
+ * @param {object} newEl 
+ * @param {object} currentEl 
+ */
+const replaceElement = (newEl, currentEl) => {
+	const parentEl = currentEl.parentNode
 
-let rulesButton = document.getElementsByClassName("rules__button")[0]
-rulesButton.addEventListener("click", handleRulesModal)
+	parentEl.insertBefore(newEl, currentEl)
+	parentEl.removeChild(currentEl)
+}
 
-let modalCloseButton = document.getElementsByClassName("close__button")[0]
-modalCloseButton.addEventListener("click", handleRulesModal)
+const stages = document.querySelectorAll('.app__stage')
+
+/**
+ * Hide all stages
+ */
+const hideStages = () => {
+	stages.forEach(stage => {
+		stage.classList.add('hide')
+	})
+}
+
+const scoreValue = document.querySelector('.score__value')
+
+/**
+ * Get score value
+ * > From localStorage
+ * @returns {number}
+ */
+const getScore = () => {
+	const scoreTextValue = parseInt(scoreValue.textContent)
+	const scoreStorageValue = parseInt(window.localStorage.getItem('score'))
+
+	if (scoreStorageValue && scoreTextValue !== scoreStorageValue) {
+		setScore(scoreStorageValue)
+	}
+	/**
+	 * Set localStorage 'score' value to scoreTextValue if not defined
+	 */
+	else if (!scoreStorageValue) {
+		setScore(scoreTextValue)
+	}
+
+	return scoreStorageValue ? scoreStorageValue : scoreTextValue
+}
+
+/**
+ * Set score value
+ * > To localStorage
+ * @param {number} value 
+ */
+const setScore = (value) => {
+	scoreValue.textContent = getDoubleDigits(value)
+	window.localStorage.setItem('score', value)
+}
+
+/**
+ * Get double digits number
+ * > Add preceding 0 if single digit
+ * @param {number} value 
+ * @returns {string}
+ */
+const getDoubleDigits = (value) => {
+	return value > 9 || value < 0 ? `${value}` : `0${value}`
+}
+
+const modal = document.querySelector('.rules-modal')
+const modalToggle = document.querySelector('.rules-modal__toggle')
+const closeButtons = modal.querySelectorAll('.rules-modal__close')
+
+/**
+ * Add click event listener to .rules-modal__toggle
+ */
+const addListenerToModalToggle = () => {
+	modalToggle.addEventListener('click', handleModalToggle)
+}
+
+/**
+ * Handle .rules-modal__toggle click event
+ * > Show modal
+ */
+const handleModalToggle = () => {
+	modal.classList.remove('hide')
+	modal.focus()
+}
+
+/**
+ * Add click event listener to .rules-modal__close buttons
+ */
+const addListenerToModalClose = () => {
+	closeButtons.forEach(closeBtn => {
+		closeBtn.addEventListener('click', handleCloseBtn)
+	})
+}
+
+/**
+ * Handle .rules-modal__close click event
+ * > Close modal
+ * > Return focus to toggle button
+ */
+const handleCloseBtn = () => {
+	modal.classList.add('hide')
+	modalToggle.focus()
+}
+
+const initApp = () => {
+	setScore(getScore())
+	addListenerToAppButtons()
+	addListenerToResultBtn()
+	addListenerToModalToggle()
+	addListenerToModalClose()
+}
+
+initApp()

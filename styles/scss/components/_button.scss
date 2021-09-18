@@ -1,0 +1,35 @@
+.button {
+	padding: 0.7rem 1rem;
+	min-width: 150px;
+	border-radius: 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.1rem;
+	font-size: 1rem;
+	display: block;
+	border: 2px solid transparent;
+
+	&:focus {
+		outline: 1px solid yellow;
+		outline-offset: 2px;
+	}
+
+	&--white {
+		background-color: $c-black-haze;
+		color: $c-fiord;
+		&:hover {
+			color: $c-black-haze;
+			background-color: transparent;
+			border: 2px solid $c-black-haze;
+		}
+	}
+
+	&--transparent {
+		color: $c-black-haze;
+		background-color: transparent;
+		border: 2px solid $c-black-haze;
+		&:hover {
+			color: $c-fiord;
+			background-color: $c-black-haze;
+		}
+	}
+}
