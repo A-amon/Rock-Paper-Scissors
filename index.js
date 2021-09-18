@@ -262,13 +262,47 @@ const addListenerToModalToggle = () => {
 	modalToggle.addEventListener('click', handleModalToggle)
 }
 
+const modalFigure = modal.querySelector('.rules-modal__figure')
+
 /**
  * Handle .rules-modal__toggle click event
  * > Show modal
  */
 const handleModalToggle = () => {
 	modal.classList.remove('hide')
-	modal.focus()
+	modalFigure.focus()
+
+	modal.addEventListener('keydown', handleModalKeydown)
+}
+
+/**
+ * Handle .rules-modal keydown event
+ * > Set focus trap
+ * > Close modal on Esc pressed
+ * @param {object} event 
+ */
+const handleModalKeydown = (event) => {
+	const { key } = event
+
+	if (key === 'Escape') {
+		handleCloseBtn()
+	}
+	else if (key === 'Tab') {
+		const currentActiveEl = document.activeElement
+
+		if (event.shiftKey && currentActiveEl.classList.contains('rules-modal__close')) {
+			event.preventDefault()
+			modalFigure.focus()
+		}
+		else if (!event.shiftKey && currentActiveEl === modalFigure) {
+			event.preventDefault()
+			closeButtons.forEach(closeBtn => {
+				if (window.getComputedStyle(closeBtn).display !== 'none') {
+					closeBtn.focus()
+				}
+			})
+		}
+	}
 }
 
 /**
@@ -288,6 +322,7 @@ const addListenerToModalClose = () => {
 const handleCloseBtn = () => {
 	modal.classList.add('hide')
 	modalToggle.focus()
+	modal.removeEventListener('keydown', handleModalKeydown)
 }
 
 const initApp = () => {
