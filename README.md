@@ -8,3 +8,8 @@ You can play the classic Rock-Paper-Scissors here (but virtually!)
 * Select one of three options: Rock/Paper/Scissors :fist: :raised_hand: :v:
 * Resume game from previous round (even after refreshing page! :relieved:)
 * Face off against randomly generated computer moves :robot:
+
+## References
+[Rock Paper Scissors](https://github.com/JepardMay/rock-paper-scissors-lizard-spock)  ⬅ Do check out this awesome work ❕
+- Box-shadow animation
+- How to switch between stages
