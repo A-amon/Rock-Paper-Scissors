@@ -102,10 +102,6 @@ button {
   background-color: #181e3f;
 }
 
-.app__button.picked {
-  pointer-events: none;
-}
-
 .app__button--paper, .app__button--rock, .app__button--scissors {
   -webkit-box-shadow: 0 -7px 0 rgba(0, 0, 0, 0.1) inset;
           box-shadow: 0 -7px 0 rgba(0, 0, 0, 0.1) inset;
@@ -124,12 +120,17 @@ button {
   left: 0;
   right: 0;
   margin: auto;
-  -webkit-transition: -webkit-transform 0.3s;
-  transition: -webkit-transform 0.3s;
-  transition: transform 0.3s;
-  transition: transform 0.3s, -webkit-transform 0.3s;
   -webkit-box-shadow: 0 7px 0 rgba(0, 0, 0, 0.1) inset;
           box-shadow: 0 7px 0 rgba(0, 0, 0, 0.1) inset;
+}
+
+.app__button.picked {
+  pointer-events: none;
+}
+
+.app__button.winner {
+  -webkit-animation: shadowstart 1s infinite linear;
+          animation: shadowstart 1s infinite linear;
 }
 
 .app__button:hover::before {
@@ -176,11 +177,75 @@ button {
   }
 }
 
+@-webkit-keyframes shadowstart {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent;
+            box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent;
+  }
+  33% {
+    -webkit-box-shadow: 0 0 0 18px rgba(255, 255, 255, 0.1), 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent;
+            box-shadow: 0 0 0 18px rgba(255, 255, 255, 0.1), 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent;
+  }
+  66% {
+    -webkit-box-shadow: 0 0 0 45px rgba(255, 255, 255, 0.1), 0 0 0 18px rgba(255, 255, 255, 0.1), 0 0 0 0 transparent, 0 0 0 0 transparent;
+            box-shadow: 0 0 0 45px rgba(255, 255, 255, 0.1), 0 0 0 18px rgba(255, 255, 255, 0.1), 0 0 0 0 transparent, 0 0 0 0 transparent;
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 76px rgba(255, 255, 255, 0.1), 0 0 0 45px rgba(255, 255, 255, 0.1), 0 0 0 18px rgba(255, 255, 255, 0.1), 0 0 0 0 transparent;
+            box-shadow: 0 0 0 76px rgba(255, 255, 255, 0.1), 0 0 0 45px rgba(255, 255, 255, 0.1), 0 0 0 18px rgba(255, 255, 255, 0.1), 0 0 0 0 transparent;
+  }
+}
+
+@keyframes shadowstart {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent;
+            box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent;
+  }
+  33% {
+    -webkit-box-shadow: 0 0 0 18px rgba(255, 255, 255, 0.1), 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent;
+            box-shadow: 0 0 0 18px rgba(255, 255, 255, 0.1), 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent;
+  }
+  66% {
+    -webkit-box-shadow: 0 0 0 45px rgba(255, 255, 255, 0.1), 0 0 0 18px rgba(255, 255, 255, 0.1), 0 0 0 0 transparent, 0 0 0 0 transparent;
+            box-shadow: 0 0 0 45px rgba(255, 255, 255, 0.1), 0 0 0 18px rgba(255, 255, 255, 0.1), 0 0 0 0 transparent, 0 0 0 0 transparent;
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 76px rgba(255, 255, 255, 0.1), 0 0 0 45px rgba(255, 255, 255, 0.1), 0 0 0 18px rgba(255, 255, 255, 0.1), 0 0 0 0 transparent;
+            box-shadow: 0 0 0 76px rgba(255, 255, 255, 0.1), 0 0 0 45px rgba(255, 255, 255, 0.1), 0 0 0 18px rgba(255, 255, 255, 0.1), 0 0 0 0 transparent;
+  }
+}
+
 .score {
   background-color: white;
   text-align: center;
   padding: 0.5rem 1.5rem;
   border-radius: 5px;
+  position: relative;
+}
+
+.score::after {
+  content: "";
+  position: absolute;
+  top: 20%;
+  right: 0.5rem;
+  font-size: 1.5rem;
+  display: none;
+}
+
+.score.add::after {
+  content: "+1";
+  color: #99cd32;
+  display: block;
+  -webkit-animation: scorePointSlideUp 1s 1 forwards;
+          animation: scorePointSlideUp 1s 1 forwards;
+}
+
+.score.minus::after {
+  content: "-1";
+  color: #f88277;
+  display: block;
+  -webkit-animation: scorePointSlideDown 1s 1 forwards;
+          animation: scorePointSlideDown 1s 1 forwards;
 }
 
 .score__title {
@@ -193,6 +258,78 @@ button {
   font-size: 3rem;
   font-weight: 700;
   color: #3b4363;
+}
+
+@-webkit-keyframes scorePointSlideUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(25px);
+            transform: translateY(25px);
+  }
+  70% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@keyframes scorePointSlideUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(25px);
+            transform: translateY(25px);
+  }
+  70% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@-webkit-keyframes scorePointSlideDown {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  70% {
+    opacity: 1;
+    -webkit-transform: translateY(25px);
+            transform: translateY(25px);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(25px);
+            transform: translateY(25px);
+  }
+}
+
+@keyframes scorePointSlideDown {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  70% {
+    opacity: 1;
+    -webkit-transform: translateY(25px);
+            transform: translateY(25px);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(25px);
+            transform: translateY(25px);
+  }
 }
 
 .rules-modal {

@@ -5,6 +5,7 @@
 	$app-button-size: 150px;
 	$app-button-size-mobile: 125px;
 	$app-button-shadow: rgba($c-black, 0.1);
+	$color-shadow-white: rgba($c-white, 0.1);
 
 	height: $app-button-size-mobile;
 	width: $app-button-size-mobile;
@@ -12,10 +13,6 @@
 	border: none;
 	position: relative;
 	background-color: $c-big-stone;
-
-	&.picked {
-		pointer-events: none;
-	}
 
 	&--paper,
 	&--rock,
@@ -35,9 +32,16 @@
 			left: 0;
 			right: 0;
 			margin: auto;
-			transition: transform 0.3s;
 			box-shadow: 0 7px 0 $app-button-shadow inset;
 		}
+	}
+
+	&.picked {
+		pointer-events: none;
+	}
+
+	&.winner {
+		animation: shadowstart 1s infinite linear;
 	}
 
 	&:hover {
@@ -80,6 +84,23 @@
 			svg {
 				transform: scale($scale-size);
 			}
+		}
+	}
+
+	@keyframes shadowstart {
+		0% {
+			box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent;
+		}
+		33% {
+			box-shadow: 0 0 0 18px $color-shadow-white, 0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent;
+		}
+		66% {
+			box-shadow: 0 0 0 45px $color-shadow-white, 0 0 0 18px $color-shadow-white, 0 0 0 0 transparent,
+				0 0 0 0 transparent;
+		}
+		100% {
+			box-shadow: 0 0 0 76px $color-shadow-white, 0 0 0 45px $color-shadow-white, 0 0 0 18px $color-shadow-white,
+				0 0 0 0 transparent;
 		}
 	}
 }

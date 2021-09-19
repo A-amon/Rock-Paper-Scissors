@@ -72,23 +72,70 @@ const handleStage2 = (playerButton) => {
 	const playerPick = playerButton.getAttribute('aria-label')
 
 	const result = getResult(playerPick, computerPick)
+
+	animateScore(result)
+	animateWinner(result)
 	setResultText(result)
 	updateScore(result)
+}
+
+const score = document.querySelector('.score')
+
+/**
+ * Animate score board point change
+ * @param {number} result 
+ */
+const animateScore = (result) => {
+	if (result > 0) {
+		score.classList.add('add')
+	}
+	else if (result < 0) {
+		score.classList.add('minus')
+	}
+
+	score.addEventListener('animationend', () => {
+		score.classList.remove('add', 'minus')
+	})
+}
+
+/**
+ * Animate winner button's box shadow
+ * @param {number} result 
+ */
+const animateWinner = (result) => {
+	const playerBtn = appCols[0].querySelector('.app__button')
+	const compBtn = appCols[1].querySelector('.app__button')
+
+	let winnerBtn
+	if (result > 0) {
+		winnerBtn = playerBtn
+	}
+	else if (result < 0) {
+		winnerBtn = compBtn
+	}
+
+	if (winnerBtn) {
+		winnerBtn.classList.add('winner')
+	}
+	else {
+		playerBtn.classList.add('winner')
+		compBtn.classList.add('winner')
+	}
 }
 
 /**
  * Update score value
  * > Calculate new score
- * @param {number} result 
+ * @param {number} result
  */
 const updateScore = (result) => {
 	const newScore = getScore() + result
 	setScore(newScore)
 }
 
-const result = document.querySelector('.app-result')
-const resultText = result.querySelector('.app-result__text')
-const resultBtn = result.querySelector('.app-result__button')
+const appResult = document.querySelector('.app-result')
+const resultText = appResult.querySelector('.app-result__text')
+const resultBtn = appResult.querySelector('.app-result__button')
 
 /**
  * Add click event listener to .app-result__button
@@ -153,19 +200,21 @@ const getResult = (playerPick, computerPick) => {
  * Set result text
  * @param {number} result 
  */
-const setResultText = (resultValue) => {
+const setResultText = (result) => {
 	let resultMessage = 'It\'s a draw'
-	if (resultValue > 0) {
+	if (result > 0) {
 		resultMessage = 'You win'
 	}
-	else if (resultValue < 0) {
+	else if (result < 0) {
 		resultMessage = 'You lose'
 	}
 
-	result.classList.remove('hide')
+	appResult.classList.remove('hide')
 	resultText.textContent = resultMessage
-	result.focus()
+	appResult.focus()
 }
+
+const computerPickText = document.querySelector('.app-result__comp')
 
 /**
  * Choose random computer pick
@@ -181,6 +230,9 @@ const selectComputerPick = () => {
 	replaceElement(clonedComputerBtn, appCols[1].children[0])
 
 	const computerPick = computerBtn.getAttribute('aria-label')
+
+	computerPickText.textContent = `The house picked ${computerPick}`
+
 	return computerPick
 }
 
@@ -285,7 +337,7 @@ const handleModalKeydown = (event) => {
 	const { key } = event
 
 	if (key === 'Escape') {
-		handleCloseBtn()
+		closeRulesModal()
 	}
 	else if (key === 'Tab') {
 		const currentActiveEl = document.activeElement
@@ -310,7 +362,7 @@ const handleModalKeydown = (event) => {
  */
 const addListenerToModalClose = () => {
 	closeButtons.forEach(closeBtn => {
-		closeBtn.addEventListener('click', handleCloseBtn)
+		closeBtn.addEventListener('click', closeRulesModal)
 	})
 }
 
@@ -319,7 +371,7 @@ const addListenerToModalClose = () => {
  * > Close modal
  * > Return focus to toggle button
  */
-const handleCloseBtn = () => {
+const closeRulesModal = () => {
 	modal.classList.add('hide')
 	modalToggle.focus()
 	modal.removeEventListener('keydown', handleModalKeydown)
